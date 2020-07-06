@@ -7,6 +7,8 @@ import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseViewModel : ViewModel() {
 
+    val TAG = javaClass.simpleName
+
     protected val loading = MutableLiveData<Boolean>()
 
     fun getLoading(): LiveData<Boolean> = loading

@@ -1,17 +1,18 @@
 package com.lingga.quiz.data.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.lingga.quiz.data.local.entities.CollegeStudent
+import io.reactivex.Completable
+import io.reactivex.Flowable
 
 @Dao
 interface CollegeStudentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUser(collegeStudent: CollegeStudent)
+    fun insertActivities(collegeStudent: CollegeStudent) : Completable
 
     @Query("select * from table_college_student")
-    fun getUser(): LiveData<CollegeStudent>
+    fun getActivities(): Flowable<List<CollegeStudent>>
 
     @Query("delete from table_college_student")
     fun clear()

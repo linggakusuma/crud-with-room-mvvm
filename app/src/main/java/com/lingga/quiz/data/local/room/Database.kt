@@ -7,7 +7,7 @@ import com.lingga.quiz.data.local.entities.CollegeStudent
 @Database(
     entities = [
         CollegeStudent::class
-    ], version = 1
+    ], version = 2
 )
 abstract class Database : RoomDatabase() {
     abstract fun collegeStudentDao(): CollegeStudentDao
