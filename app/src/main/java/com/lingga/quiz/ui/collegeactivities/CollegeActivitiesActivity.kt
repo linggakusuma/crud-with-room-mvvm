@@ -10,6 +10,7 @@ import com.lingga.quiz.data.base.BaseActivity
 import com.lingga.quiz.data.local.entities.CollegeStudent
 import com.lingga.quiz.databinding.ActivityCollegeActivitiesBinding
 import com.lingga.quiz.ui.home.MainActivity
+import com.lingga.quiz.utils.ext.observe
 import java.util.*
 import javax.inject.Inject
 
@@ -28,6 +29,19 @@ class CollegeActivitiesActivity :
             backButton.setOnClickListener { onBackPressed() }
             inputDate.setOnClickListener { showDatePicker() }
             buttonSave.setOnClickListener { onSave() }
+        }
+    }
+
+    override fun subscribeUi() {
+        super.subscribeUi()
+        viewModel.doGetActivity(intent.getIntExtra(MainActivity.EXTRA_ID, 0))
+        binding.apply {
+            observe(viewModel.collegeStudent) {
+                inputCourses.setText(it.courses)
+                inputLecturer.setText(it.lecturer)
+                inputDate.text = it.date
+                inputNotes.setText(it.note)
+            }
         }
     }
 
@@ -57,7 +71,10 @@ class CollegeActivitiesActivity :
                 date = inputDate.text.toString(),
                 note = inputNotes.text.toString()
             )
-            viewModel.doInsert(collegeStudent)
+
+            if (intent.getIntExtra(MainActivity.EXTRA_ID, 0) == 0)
+                viewModel.doInsert(collegeStudent)
+            else viewModel.doUpdate(collegeStudent)
         }
         navigateToHome()
     }
@@ -67,4 +84,5 @@ class CollegeActivitiesActivity :
         startActivity(intent)
         finish()
     }
+
 }

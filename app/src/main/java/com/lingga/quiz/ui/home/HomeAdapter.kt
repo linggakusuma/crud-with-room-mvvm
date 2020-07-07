@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lingga.quiz.data.local.entities.CollegeStudent
 import com.lingga.quiz.databinding.ListItemActivitiesBinding
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter(val onClick: (CollegeStudent) -> Unit) :
+    RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     private var collegeStudents = emptyList<CollegeStudent>()
 
@@ -26,6 +27,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
         fun bind(collegeStudent: CollegeStudent) {
             binding.apply {
                 item = collegeStudent
+                itemView.setOnClickListener { onItemClick(collegeStudent)}
                 executePendingBindings()
             }
         }
@@ -35,4 +37,6 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
         this.collegeStudents = collegeStudents
         notifyDataSetChanged()
     }
+
+    private fun onItemClick(collegeStudent: CollegeStudent) = onClick(collegeStudent)
 }

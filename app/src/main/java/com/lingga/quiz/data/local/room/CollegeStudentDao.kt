@@ -9,7 +9,10 @@ import io.reactivex.Flowable
 interface CollegeStudentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertActivities(collegeStudent: CollegeStudent) : Completable
+    fun insertActivities(collegeStudent: CollegeStudent): Completable
+
+    @Query("SELECT * FROM table_college_student WHERE id =:id")
+    fun getActivityById(id: Int): Flowable<CollegeStudent>
 
     @Query("select * from table_college_student")
     fun getActivities(): Flowable<List<CollegeStudent>>
@@ -18,5 +21,5 @@ interface CollegeStudentDao {
     fun clear()
 
     @Update
-    fun updateUser(collegeStudent: CollegeStudent)
+    fun updateActivity(collegeStudent: CollegeStudent): Completable
 }

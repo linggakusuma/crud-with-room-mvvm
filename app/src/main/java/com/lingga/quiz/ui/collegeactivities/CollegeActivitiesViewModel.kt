@@ -18,12 +18,23 @@ class CollegeActivitiesViewModel @Inject constructor(private val database: Datab
     private val _collegeStudents = MutableLiveData<List<CollegeStudent>>()
     val collegeStudents: LiveData<List<CollegeStudent>> = _collegeStudents
 
+    private val _collegeStudent = MutableLiveData<CollegeStudent>()
+    val collegeStudent: LiveData<CollegeStudent> = _collegeStudent
+
     private fun insertActivities(collegeStudent: CollegeStudent): Completable {
         return database.collegeStudentDao().insertActivities(collegeStudent)
     }
 
     private fun getAllActivities(): Flowable<List<CollegeStudent>> {
         return database.collegeStudentDao().getActivities()
+    }
+
+    private fun getActivity(id: Int): Flowable<CollegeStudent> {
+        return database.collegeStudentDao().getActivityById(id)
+    }
+
+    private fun updateActivity(collegeStudent: CollegeStudent): Completable {
+        return database.collegeStudentDao().updateActivity(collegeStudent)
     }
 
     fun doInsert(collegeStudent: CollegeStudent) {
@@ -48,6 +59,32 @@ class CollegeActivitiesViewModel @Inject constructor(private val database: Datab
                 .subscribe(
                     { activities -> _collegeStudents.postValue(activities) },
                     { throwable -> Log.e(TAG, "Unable to get programs", throwable) }
+                )
+        )
+    }
+
+    fun doGetActivity(id: Int) {
+        compositeDisposable.add(
+            getActivity(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { activities -> _collegeStudent.postValue(activities) },
+                    { throwable -> Log.e(TAG, "Unable to get programs", throwable) }
+                )
+        )
+    }
+
+    fun doUpdate(collegeStudent: CollegeStudent) {
+        compositeDisposable.add(
+            updateActivity(collegeStudent).subscribeOn(Schedulers.io())
+                .doOnSubscribe { setLoading() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { finishLoading() },
+                    { throwable ->
+                        Log.e(TAG, "Unable to update", throwable)
+                        finishLoading()
+                    }
                 )
         )
     }
