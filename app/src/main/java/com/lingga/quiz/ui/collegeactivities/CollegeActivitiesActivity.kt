@@ -32,6 +32,8 @@ class CollegeActivitiesActivity :
             inputDate.setOnClickListener { showDatePicker() }
             buttonSave.setOnClickListener { onSave() }
             setSupportActionBar(toolbar)
+            if (intent.getIntExtra(MainActivity.EXTRA_ID, 0) != 0) title.text =
+                getString(R.string.update_activities)
         }
     }
 
