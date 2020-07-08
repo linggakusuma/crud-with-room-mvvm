@@ -17,8 +17,8 @@ interface CollegeStudentDao {
     @Query("select * from table_college_student")
     fun getActivities(): Flowable<List<CollegeStudent>>
 
-    @Query("delete from table_college_student")
-    fun clear()
+    @Query("DELETE FROM table_college_student WHERE id = :id")
+    fun delete(id: Int): Completable
 
     @Update
     fun updateActivity(collegeStudent: CollegeStudent): Completable

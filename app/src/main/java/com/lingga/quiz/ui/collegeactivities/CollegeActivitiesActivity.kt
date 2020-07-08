@@ -2,6 +2,8 @@ package com.lingga.quiz.ui.collegeactivities
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.DatePicker
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +31,7 @@ class CollegeActivitiesActivity :
             backButton.setOnClickListener { onBackPressed() }
             inputDate.setOnClickListener { showDatePicker() }
             buttonSave.setOnClickListener { onSave() }
+            setSupportActionBar(toolbar)
         }
     }
 
@@ -72,10 +75,25 @@ class CollegeActivitiesActivity :
                 note = inputNotes.text.toString()
             )
 
-            if (intent.getIntExtra(MainActivity.EXTRA_ID, 0) == 0)
+            if (intent.getIntExtra(MainActivity.EXTRA_ID, 0) == 0) {
                 viewModel.doInsert(collegeStudent)
-            else viewModel.doUpdate(collegeStudent)
+            } else {
+                viewModel.doUpdate(
+                    CollegeStudent(
+                        id = intent.getIntExtra(MainActivity.EXTRA_ID, 0),
+                        lecturer = inputLecturer.text.toString(),
+                        courses = inputCourses.text.toString(),
+                        date = inputDate.text.toString(),
+                        note = inputNotes.text.toString()
+                    )
+                )
+            }
         }
+        navigateToHome()
+    }
+
+    private fun doDelete() {
+        viewModel.doDelete(intent.getIntExtra(MainActivity.EXTRA_ID, 0))
         navigateToHome()
     }
 
@@ -85,4 +103,20 @@ class CollegeActivitiesActivity :
         finish()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        val item = menu?.findItem(R.id.delete)
+        item?.isVisible = intent.getIntExtra(MainActivity.EXTRA_ID, 0) != 0
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete -> {
+                doDelete()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

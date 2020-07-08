@@ -37,6 +37,10 @@ class CollegeActivitiesViewModel @Inject constructor(private val database: Datab
         return database.collegeStudentDao().updateActivity(collegeStudent)
     }
 
+    private fun deleteActivity(id:Int): Completable {
+        return database.collegeStudentDao().delete(id)
+    }
+
     fun doInsert(collegeStudent: CollegeStudent) {
         compositeDisposable.add(
             insertActivities(collegeStudent).subscribeOn(Schedulers.io())
@@ -83,6 +87,21 @@ class CollegeActivitiesViewModel @Inject constructor(private val database: Datab
                     { finishLoading() },
                     { throwable ->
                         Log.e(TAG, "Unable to update", throwable)
+                        finishLoading()
+                    }
+                )
+        )
+    }
+
+    fun doDelete(id:Int) {
+        compositeDisposable.add(
+            deleteActivity(id).subscribeOn(Schedulers.io())
+                .doOnSubscribe { setLoading() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { finishLoading() },
+                    { throwable ->
+                        Log.e(TAG, "Unable to delete", throwable)
                         finishLoading()
                     }
                 )

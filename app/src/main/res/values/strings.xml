@@ -12,4 +12,5 @@
     <string name="enter_your_notes">Enter your notes</string>
     <string name="save">Save</string>
     <string name="find_your_activities_here">Find your activities here</string>
+    <string name="delete">Delete</string>
 </resources>
